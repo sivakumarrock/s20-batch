@@ -1,0 +1,3247 @@
+Git: Git is a distributed version control system for tracking changes in source code during software development. It is designed for coordinating work among programmers, but it can be used to track changes in any set of files. Its goals include speed, data integrity, and support for distributed, non-linear workflows *********** GIT ************
+
+Git Index:
+==========
+
+* Introduction to git
+* Git Terminology
+* Repo's
+* .gitignore
+* log Management
+* Branching
+* Merging/rebase
+* Merge Conflicts
+* cherry-pick
+* stash
+* snapshort
+* HEAD
+* unstaging(rm, reset, revert)
+* Git Diff 
+* Tags
+* bisect
+* rewritting commit messages
+* git-hub
+
+operating system(os)------>windows/mac/linux..........etc
+SCM/VCS------->git/svn/perforce/clear-case/cvs......etc
+devops action = file create and file modified and file delete maintain repository
+
+SCM =SOURCE CODE MANAGEMENT 
+VCS= VERSION CONTROL SYSTEM
+
+Git is a Source Code Management(SCM) / Version Control system(VCS) / Distributed version control  system
+
+--> Types of SCM/VCS tools 
+	* Git,
+	* CVS,
+	* Perforce,
+	* clearcase,
+	* svn
+
+git:- it is a process of tracking and controlling/maintaining changes of a software product
+
+--> Download git from https://git-scm.com/
+    which git --> path of git where it installed
+    git --version -->to verify 
+    git help config
+
+what is git?
+Git is a distributed version control system for tracking changes in source code
+ during software development. It is designed for coordinating work among programmers, 
+but it can be used to track changes in any set of files. Its goals include speed, 
+data integrity, and support for distributed, non-linear workflows.
+                    (or)
+
+why use git?
+developer action Whatever action’s performance of  developer it go track to maintain inside the repository(storage).
+
+ Action = file create,file modify,file delete 
+git generate 40 char unique id
+
+
+diff between git and svn?
+
+	GIT						SVN
+      --------	                		   ---------------    
+                                   
+1.Git is open source distributed            Apache Subversion is an open source software version
+  vice control system developed 	      and revision control system under Apache license.
+  by Linus Torvalds in 2005.				     
+  It emphasis on speed and 
+  data integrity
+
+2.Git has a Distributed Model.		   SVN has a Centralized Model.
+
+3.In git every user has their own 	   In SVN there is central repository has working copy 
+  copy of code on their local like	   that also make changes and committed in central repository.
+  their own branch.
+	
+4.In git we do not required any 
+   Network to perform git operation.  	  In SVN we required Network for runs the SVN operation. 
+
+5.Git is more difficult to learn. 
+   It has more concepts and commands. 	  SVN is much easier to learn as compared to git.
+
+6.Git deals with large number of files	   SVN control the large number of binary files easily.
+   like binary files that change quickly
+   that why it become slow.	
+
+7.In git we create only .git directory.	   In SVN we create .svn directory in each folder.
+						
+8.It does not not have good UI as 
+   compared to SVN.	                    SVN has simple and better user interface .
+
+
+Git Installation In EC2
+------------------------
+1. yum update -y
+2. yum install git -y
+   (Note:- here you will get old version of git)
+3. yum remove git -y
+
+4. install latest version, for that you need to install some dependencys first.
+   sudo yum install wget unzip tar make autoconf libcurl-devel expat-devel gcc gettext-devel openssl-devel perl-devel zlib-devel -y
+
+5. download latest source from (tar ball)
+    wget https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.33.1.tar.gz
+
+6. Extract the tar ball 
+     tar -xvzf git-2.33.0.tar.gz
+
+7. enter into extracted folder i.e git-2.33.0
+     cd git-2.33.0
+
+8. select where to install git. (by default it will go to /usr/bin/local)
+     sudo ./configure --prefix=/opt/tekteacher-git
+
+9. sudo make
+10. sudo make install
+11. git --version 
+    ln -s /opt/tekteacher-git/bin/git /bin/git
+
+9. git --version 
+    
+git features compare to other tools:-
+
+	1. Speed
+	2. Support for non-linear development(thounds of branches, for parallel development)
+	3. distributed version control system
+	4. Able to handle large projects efficiently
+
+Why Git is Distributed Version Control system:- 
+	1. Speed
+	2. Network Issues
+	3. user collabration
+        4. security reasons user to user sharing is not recommanded.
+
+distributed version control system:-
+-----------------------------------
+centralized model:-(cvs,perforce,sub version)
+
+draw back:-
+
+1.time consumed
+2.network issue
+3.user collabration 
+4. two user share same file collabration
+
+distributed model:-(git) many operations are local
+
+advantages:-
+
+1. Speed
+2. Network Issues
+3. user collabration
+4. security reasons user to user sharing is not recommanded.
+
+Git Terminology:-
+=================
+1. client/server
+2. workspace: - space where the client comm with server
+3. Repository : - it is a container/Directory. for each product/project we've one repository in the server.
+4. Branch :- parallel development
+5. Checkin:- Once the changes done, storing back to the server to maintain perminentaly
+6  Checkout:- Taking petmission from server to do modifications.	
+7. Revision/Version id/commit id : - git will track all the info of changes done by a user like when,which repo,who,which file, what changes) 
+
+it stores in the form of snapshots i.e diff b/n existing file data and currently modified file data.
+	     commit id/check in :- with 40 char long
+
+ in workspace we've 3 stages before commit id get generated
+	       
+ --> working dir:- where you working with files physically
+	       
+ --> Staging Area:- it helps to create commit id
+                     (it is virtual area , here workspace don't know which one is existing and modified data)
+	        
+--> Repository:- where stores data (commited file)
+
+program:-
+========
+siva@DESKTOP-NB7E3GI MINGW64 ~/Desktop
+$ cd ~
+
+siva@DESKTOP-NB7E3GI MINGW64 ~
+$ git --version
+git version 2.34.0.windows.1
+
+siva@DESKTOP-NB7E3GI MINGW64 ~
+$ pwd
+/c/Users/siva
+
+siva@DESKTOP-NB7E3GI MINGW64 ~     (home directionary window c files)
+$ ls
+ AppData/             Downloads/                                                                                  
+'Application Data'@   Favorites/                                         
+ Contacts/            Links/           
+ Cookies@            'Local Settings'@   
+ Desktop/             Music/                                                                                            
+ Documents/          'My Documents'@   
+                                                                              
+siva@DESKTOP-NB7E3GI MINGW64 ~
+$ cd d:
+
+siva@DESKTOP-NB7E3GI MINGW64 /d
+$ cd
+
+siva@DESKTOP-NB7E3GI MINGW64 ~
+$ cd
+
+siva@DESKTOP-NB7E3GI MINGW64 ~
+$ cd d
+bash: cd: d: No such file or directory
+
+siva@DESKTOP-NB7E3GI MINGW64 ~
+$ cd d:
+
+siva@DESKTOP-NB7E3GI MINGW64 /d
+$ cd
+
+siva@DESKTOP-NB7E3GI MINGW64 ~
+$ cd /d
+
+siva@DESKTOP-NB7E3GI MINGW64 /d
+$ ls
+               
+'New folder (3)'/ s20/                                                                              
+ Notification-Health-Medical-Family-Welfare-Dept-AP-Mid-Level-Health-Provider-Posts.pdf                
+'PDF Reader for Windows 7.lnk'*                                                                       
+                 
+siva@DESKTOP-NB7E3GI MINGW64 /d
+$ git config --global user.name "saikrishna"
+
+siva@DESKTOP-NB7E3GI MINGW64 /d
+$ git config --global user.email "saikrishna@gmail.com"
+
+siva@DESKTOP-NB7E3GI MINGW64 /d
+$ git config --global push.default simple
+
+siva@DESKTOP-NB7E3GI MINGW64 /d
+$ mkdir s20
+mkdir: cannot create directory ‘s20’: File exists
+
+siva@DESKTOP-NB7E3GI MINGW64 /d
+$ mkdir s20
+
+siva@DESKTOP-NB7E3GI MINGW64 /d
+$ cd s20
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20
+$
+
+
+git config:-
+=========
+git config --global user.name "TekTeacher"
+git config --global user.email "contact@tekteacher.com
+git config --global push.default simple
+
+git config --global core.editor 'vi' 
+git config --list
+
+local  : By default, git config will write to a local level, if no configuration option is passed. .git/config
+global : Global level configuration is user-specific, means it is applied to an operating system user. 
+         Global configuration values are stored in C:\Users\vinodh\.gitconfig
+		Ex:- One of the most common use cases for git config is configuring which editor Git should use. 
+		     editor = VIM
+		Ex:- Merging Tools 
+		     git config --global merge.tool kdiff3
+system : System-level configuration is applied across an entire machine. This covers all users on an operating system and all repos.
+	 system configuration values are stored in C:\Program Files\Git\mingw64\etc\gitconfig
+
+git config --edit/--list --local
+git config --edit --global
+git config --edit --system
+
+program:-
+=======
+
+siva@DESKTOP-NB7E3GI MINGW64 ~    (global(vi-editor)- change name)
+$ git config --edit --global
+
+
+creating Repositorys:-
+===================
+1. bare repo: is the centrailized repository which is used to store and share the changes, but we cannot view the data.
+   ---------
+
+mkdir central.git
+git init --bare
+
+program:-
+=======
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20
+$ git init --bare central.git
+Initialized empty Git repository in D:/s20/central.git/
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20
+$
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20
+$ ls
+central.git/          (:-not folder)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20
+$ cd central.git/    (:-central.git repository)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/central.git (BARE:master)
+$ ls
+HEAD  config  description  hooks/  info/  objects/  refs/   (:- repository files)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/central.git (BARE:master)
+$ cd ..
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20
+$
+
+
+2. non-bare repo: user (or) workspace (or) local repository whih is used to modify the changes.
+   -------------
+
+git clone central.git <source>  vinuspace <dest>
+create file in workspace 
+move to staging area : git add java
+move from staging repo : git commit -m "first chickin"
+
+-->git log : list of all the commits will display
+--> set of changes together with single version id: git add . (or) java, oracle...etc
+
+if you don't have the same content then-->Modified/Untracked files
+if you have same content in the file then --> Unmodified 
+
+--> git push <source> <dest>
+--> git push enter : to push the changes to repository for sharing to other users
+--> 2nd user access the repo and created new file and pushed it to central repo and now
+     1user want to update things what user2 changed. then use
+-->git pull
+
+program:-
+=======
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20
+$ ls
+central.git/
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20
+$ git clone central.git/ vinay            (vinay create non-bare repository with support central.git)
+Cloning into 'vinay'...                           (clone = copy)
+warning: You appear to have cloned an empty repository.
+done.
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20
+$ ls
+central.git/  vinay/
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20
+$ cd vinay
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)        (master created default)
+$ ls							  
+							 ( master branch files hidden)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ ls -a
+./  ../  .git/
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ cd  .git
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay/.git (GIT_DIR!)
+$ ls
+HEAD  config  description  hooks/  info/  objects/  refs/
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay/.git (GIT_DIR!)
+$ cd ..
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ ls
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ cat > sample
+hello git
+devops
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ ls
+sample						(:-repository folder inside files store in a master)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ cat sample
+hello git
+devops
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git status  			(:-untracked:working directory)
+On branch master
+
+No commits yet
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        sample   (red colour)
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git add sample
+warning: LF will be replaced by CRLF in sample.
+The file will have its original line endings in your working directory
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git status
+On branch master			(:-parcel save in staging area)
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+        new file:   sample  (green colour)
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git commit sample -m"iam creating new file called sample"
+warning: LF will be replaced by CRLF in sample.
+The file will have its original line endings in your working directory
+[master (root-commit) 0570c76] iam creating new file called sample
+ 1 file changed, 2 insertions(+)
+ create mode 100644 sample
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git status         
+On branch master         	 (:-completed save in git repository)
+
+Your branch is based on 'origin/master', but the upstream is gone.
+  (use "git branch --unset-upstream" to fixup)
+
+nothing to commit, working tree clean
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ cd ..
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20
+$
+
+
+ 			(FILE :- MODIFIED)
+		--------------------------------
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20
+$ cd vinay/
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ ls
+sample
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ vi sample 		(vi editor modified datain a sample file and add the data insert  mode)
+	      		(working area is modified sample file)  
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ cat sample
+hello git
+devops
+line3
+line4
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git status     (repo old data store working directory modified new data add line.. the sample file (red colour))
+On branch master
+Your branch is based on 'origin/master', but the upstream is gone.
+  (use "git branch --unset-upstream" to fixup)
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   sample (red colour)
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git add sample
+warning: LF will be replaced by CRLF in sample.
+The file will have its original line endings in your working directory
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git status
+On branch master
+Your branch is based on 'origin/master', but the upstream is gone.
+  (use "git branch --unset-upstream" to fixup)
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   sample
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git commit  sample -m"sample file modified with 2 lines of data"
+warning: LF will be replaced by CRLF in sample.
+The file will have its original line endings in your working directory
+[master 596544f] sample file modified with 2 lines of data
+ 1 file changed, 2 insertions(+)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git status
+On branch master
+Your branch is based on 'origin/master', but the upstream is gone.
+  (use "git branch --unset-upstream" to fixup)
+
+nothing to commit, working tree clean
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ ls
+sample
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git push             (local non bare(vinay) repo collect data (master), the data  push to central.git(bare))
+Enumerating objects: 6, done.   (the data  push from non-bare(vinay) to bare (central.git))
+Counting objects: 100% (6/6), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (6/6), 487 bytes | 243.00 KiB/s, done.
+Total 6 (delta 0), reused 0 (delta 0), pack-reused 0
+To D:/s20/central.git/
+ * [new branch]      master -> master
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ cd ..
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20
+$ ls
+central.git/  vinay/
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20
+$ cd central.git/
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/central.git (BARE:master)
+$ ls
+HEAD  config  description  hooks/  info/  objects/  refs/
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/central.git (BARE:master)
+$
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/central.git (BARE:master)
+$ cd ..
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20
+$
+
+				NEW EMPLOYEE CREATE ID (name:-kalpana)
+			---------------------------------------------------
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20
+$ git clone central.git/ kalpana
+Cloning into 'kalpana'...
+done.
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20
+$ ls
+central.git/  kalpana/  vinay/
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20
+$ cd kalpana
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/kalpana (master)
+$ ls
+sample
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/kalpana (master)
+$ touch hello
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/kalpana (master)
+$ ls
+hello  sample
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/kalpana (master)
+$ git status
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        hello (red colour)
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/kalpana (master)
+$ git add hello
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/kalpana (master)
+$ git commit  hello -m"hello file createdin kalpana"
+[master f3b26ec] hello file createdin kalpana
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 hello
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/kalpana (master)
+$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 1 commit.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/kalpana (master)
+$ git push             (kalpana data push to central.git)
+Enumerating objects: 4, done.
+Counting objects: 100% (4/4), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 275 bytes | 275.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+To D:/s20/central.git/
+   596544f..f3b26ec  master -> master
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/kalpana (master)
+$ ls
+hello  sample
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/kalpana (master)
+$ cd ..
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20
+$ ls
+central.git/  kalpana/  vinay/
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20
+$ cd vinay/
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ ls
+sample
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git pull          (data(hello) in central.git download to vinay repo)
+remote: Enumerating objects: 4, done.
+remote: Counting objects: 100% (4/4), done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+Unpacking objects: 100% (3/3), 255 bytes | 1024 bytes/s, done.
+From D:/s20/central
+   596544f..f3b26ec  master     -> origin/master
+Updating 596544f..f3b26ec
+Fast-forward
+ hello | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 hello
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ ls
+hello  sample
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$
+
+Log viewing:
+============
+--> git log -3
+--> git log --oneline --grep "workspace"
+--> git log --pretty=oneline
+--> git log --grep "stringmasg" --oneline
+--> git shortlog
+--> git log --stat
+git show --stat 23rt459bf
+git show --name-status 23rt45bf
+git show --name-only abc
+git log hello.txt
+
+program (commit message):-
+------------------------
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ ls
+hello  sample
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git log
+commit f3b26ec9e53f97fdd24a82c89d4e9f4d54818013 (HEAD -> master, origin/master)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 13:13:23 2021 -0800
+
+    hello file createdin kalpana
+
+commit 596544f812cd4ec986a241f41851288b1739ec7c
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:30:00 2021 -0800
+
+    sample file modified with 2 lines of data
+
+commit 0570c7650f7ec57a84def2d46f65aa91a7edf7b7
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:12:02 2021 -0800
+
+    iam creating new file called sample
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git log -2
+commit f3b26ec9e53f97fdd24a82c89d4e9f4d54818013 (HEAD -> master, origin/master)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 13:13:23 2021 -0800
+
+    hello file createdin kalpana
+
+commit 596544f812cd4ec986a241f41851288b1739ec7c
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:30:00 2021 -0800
+
+    sample file modified with 2 lines of data
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git log --oneline
+f3b26ec (HEAD -> master, origin/master) hello file createdin kalpana
+596544f sample file modified with 2 lines of data
+0570c76 iam creating new file called sample
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git log --oneline -1
+f3b26ec (HEAD -> master, origin/master) hello file createdin kalpana
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git log --grep "sample"
+commit 596544f812cd4ec986a241f41851288b1739ec7c
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:30:00 2021 -0800
+
+    sample file modified with 2 lines of data
+
+commit 0570c7650f7ec57a84def2d46f65aa91a7edf7b7
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:12:02 2021 -0800
+
+    iam creating new file called sample
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git log --grep "sample" --oneline
+596544f sample file modified with 2 lines of data
+0570c76 iam creating new file called sample
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git log --grep "sample" --oneline -1
+596544f sample file modified with 2 lines of data
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git log sample
+commit 596544f812cd4ec986a241f41851288b1739ec7c
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:30:00 2021 -0800
+
+    sample file modified with 2 lines of data
+
+commit 0570c7650f7ec57a84def2d46f65aa91a7edf7b7
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:12:02 2021 -0800
+
+    iam creating new file called sample
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git log hello
+commit f3b26ec9e53f97fdd24a82c89d4e9f4d54818013 (HEAD -> master, origin/master)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 13:13:23 2021 -0800
+
+    hello file createdin kalpana
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git shortlog
+saikrishna (3):
+      iam creating new file called sample
+      sample file modified with 2 lines of data
+      hello file createdin kalpana
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git log
+commit f3b26ec9e53f97fdd24a82c89d4e9f4d54818013 (HEAD -> master, origin/master)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 13:13:23 2021 -0800
+
+    hello file createdin kalpana
+
+commit 596544f812cd4ec986a241f41851288b1739ec7c
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:30:00 2021 -0800
+
+    sample file modified with 2 lines of data
+
+commit 0570c7650f7ec57a84def2d46f65aa91a7edf7b7
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:12:02 2021 -0800
+
+    iam creating new file called sample
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git show  --stat f3b26ec9e53f97fdd24a82c89d4e9f4d54818013
+commit f3b26ec9e53f97fdd24a82c89d4e9f4d54818013 (HEAD -> master, origin/master)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 13:13:23 2021 -0800
+
+    hello file createdin kalpana
+
+ hello | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git show  --stat 596544f812cd4ec986a241f41851288b1739ec7c
+commit 596544f812cd4ec986a241f41851288b1739ec7c
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:30:00 2021 -0800
+
+    sample file modified with 2 lines of data
+
+ sample | 2 ++
+ 1 file changed, 2 insertions(+)
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git show  --stat
+commit f3b26ec9e53f97fdd24a82c89d4e9f4d54818013 (HEAD -> master, origin/master)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 13:13:23 2021 -0800
+
+    hello file createdin kalpana
+
+ hello | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git  log --pretty=oneline
+f3b26ec9e53f97fdd24a82c89d4e9f4d54818013 (HEAD -> master, origin/master) hello file createdin kalpana
+596544f812cd4ec986a241f41851288b1739ec7c sample file modified with 2 lines of data
+0570c7650f7ec57a84def2d46f65aa91a7edf7b7 iam creating new file called sample
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$
+
+ 	        No of files create
+      -------------------------------------
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ ls
+hello  sample
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git status
+On branch master
+Your branch is up to date with 'origin/master'.
+
+nothing to commit, working tree clean
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ touch t1 t2 t3
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git status
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        t1
+        t2
+        t3
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git add .
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git status
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        new file:   t1
+        new file:   t2
+        new file:   t3
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git commit -m"t-series of files"
+[master 7160614] t-series of files
+ 3 files changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 t1
+ create mode 100644 t2
+ create mode 100644 t3
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 1 commit.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$
+
+
+Git ignoring:
+=============
+--> .gitignore : is a conf file to ignore the unwanted runtime files like jar, war, log....
+              1.class (Full name)
+             *.class (pattern matching)
+
+
+	program( .git ignore file created):
+    -------------------------------------------
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ vi .gitignore        (vi editor add data  *.class )
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git add .              (any .class simply ignore)
+warning: LF will be replaced by CRLF in .gitignore.
+The file will have its original line endings in your working directory
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git commit -m"ignore concept"
+[master 199a9ae] ignore concept
+ 1 file changed, 2 insertions(+)
+ create mode 100644 .gitignore
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ touch app.class
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git status          (any .class simply ignore)
+On branch master
+Your branch is ahead of 'origin/master' by 2 commits.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ ls
+app.class  hello  sample  t1  t2  t3
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git add app.class
+The following paths are ignored by one of your .gitignore files:
+app.class
+hint: Use -f if you really want to add them.
+hint: Turn this message off by running
+hint: "git config advice.addIgnoredFile false"
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git add .
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 2 commits.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git add -f app.class
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 2 commits.
+  (use "git push" to publish your local commits)
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        new file:   app.class
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git commit -m"app.class file"
+[master fa8ae04] app.class file
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 app.class
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 3 commits.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ vi .gitignore           (vi editor modified add data *.class dev* x* vinodh)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 3 commits.
+  (use "git push" to publish your local commits)
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   .gitignore
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git add .
+warning: LF will be replaced by CRLF in .gitignore.
+The file will have its original line endings in your working directory
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git commit -m"ignore"
+[master 7f1d4dd] ignore
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 4 commits.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ ls
+app.class  hello  sample  t1  t2  t3       (:-.gitignore hidden file not shown ls command)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ ls -a
+./  ../  .git/  .gitignore  app.class  hello  sample  t1  t2  t3
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$
+
+
+Branching:- 
+===========
+--> parallel development
+--> storing of files in a repo is in the form of branches 
+       ex:  android 			windows
+               file1			    file1
+               file2			    file2
+              	
+       here the futures are same only slight diff i.e os
+--> master is the default branch whenever we create repository/workspace
+--> at any point of time you can work with  only one branch at a time
+--> git branch : list of branches avilable
+      git branch branch_name
+      git checkout new_branch : switch to other branch
+      git checkout -b new_branch_name : creating new and switching to new branch
+--> when we create a new branch based on the master the same fiels and commit ids will come to new branch also.
+# merging the 2 branches:-
+--> git merge <sour> <dest>
+--> git branch -d <branch_name> : to delete branch, use 'D' for forcely remove without fully merged.
+--> git branch --merged:- lists the branches that have been merged into the current branch
+--> git branch –no-merged:- lists the branches that have not been merged
+--> git rebase :Alternate to merge 
+
+Note:- when we create,edit,delete in workspace, this shows same in all branches until you commit permanently. 
+
+--> bare repo  you will not have working dir, so i.e you not able to see
+
+Merging:-
+=========
+--> Master(Target)<---------feature(source)  
+ 
+			PROGRAM (BRANCH --MERGE):-
+			--------------------------
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git branch tekteacher
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git branch
+* master
+  tekteacher
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ ls
+app.class  hello  sample  t1  t2  t3
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git log
+commit 7f1d4dde338321fc0134c4f0c948fb2202631672 (HEAD -> master, tekteacher)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:17:47 2021 -0800
+
+    ignore
+
+commit fa8ae0413980ed1fb2a48f58dce560790a655429
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:08:17 2021 -0800
+
+    app.class file
+
+commit 199a9ae3cfeddb38e46a6737cd45835e71cb3f0e
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:04:22 2021 -0800
+
+    ignore concept
+
+commit 7160614de88c00ea204f170f173b0da37922531e
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 13:54:24 2021 -0800
+
+    t-series of files
+
+commit f3b26ec9e53f97fdd24a82c89d4e9f4d54818013 (origin/master)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 13:13:23 2021 -0800
+
+    hello file createdin kalpana
+
+commit 596544f812cd4ec986a241f41851288b1739ec7c
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:30:00 2021 -0800
+
+    sample file modified with 2 lines of data
+
+commit 0570c7650f7ec57a84def2d46f65aa91a7edf7b7
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:12:02 2021 -0800
+
+    iam creating new file called sample
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git checkout tekteacher
+Switched to branch 'tekteacher'
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tekteacher)
+$ git branch
+  master
+* tekteacher
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tekteacher)
+$ ls
+app.class  hello  sample  t1  t2  t3
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tekteacher)
+$ touch jcb
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tekteacher)
+$ git status
+On branch tekteacher
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        jcb
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tekteacher)
+$ git add .
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tekteacher)
+$ git commit -m"jcb file"
+[tekteacher cf0c4ea] jcb file
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 jcb
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tekteacher)
+$ ls
+app.class  hello  jcb  sample  t1  t2  t3
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tekteacher)
+$ git checkout master
+Switched to branch 'master'
+Your branch is ahead of 'origin/master' by 4 commits.
+  (use "git push" to publish your local commits)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ ls
+app.class  hello  sample  t1  t2  t3
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ touch sam
+				 (sam file  create in  master branch)
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ ls
+app.class  hello  sam  sample  t1  t2  t3   (sam file not add staging area in a master branch)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git switch tekteacher
+Switched to branch 'tekteacher'
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tekteacher)
+$ ls
+app.class  hello  jcb  sam  sample  t1  t2  t3      (it default shows sam file in tekteacher branch)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tekteacher)
+$ git status
+On branch tekteacher
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        sam
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tekteacher)
+$ git add .
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tekteacher)
+$ git commit -m"sam file"              (sam file  save in tekteacher)
+[tekteacher c0232a2] sam file
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 sam
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tekteacher)
+$ git status
+On branch tekteacher
+nothing to commit, working tree clean
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tekteacher)
+$ git switch master
+Switched to branch 'master'
+Your branch is ahead of 'origin/master' by 4 commits.
+  (use "git push" to publish your local commits)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ ls
+app.class  hello  sample  t1  t2  t3     (not shown  sam file in master branch)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git merge tekteacher
+Updating 7f1d4dd..c0232a2
+Fast-forward
+ jcb | 0
+ sam | 0
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 jcb
+ create mode 100644 sam
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ ls
+app.class  hello  jcb  sam  sample  t1  t2  t3
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master) 
+$ git log
+commit c0232a2c3ab5fb4d21b4fa89d6fe45682969c24b (HEAD -> master, tekteacher)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 18:43:16 2021 -0800
+					(master,tekteacher both merge)
+    sam file				(master,tekteacher = merge)
+
+commit cf0c4eab7dfb72008afefa5d820e61cd65ff9049
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 18:26:39 2021 -0800
+
+    jcb file
+
+commit 7f1d4dde338321fc0134c4f0c948fb2202631672
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:17:47 2021 -0800
+
+    ignore
+
+commit fa8ae0413980ed1fb2a48f58dce560790a655429
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:08:17 2021 -0800
+
+    app.class file
+
+commit 199a9ae3cfeddb38e46a6737cd45835e71cb3f0e
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:04:22 2021 -0800
+
+    ignore concept
+
+commit 7160614de88c00ea204f170f173b0da37922531e
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 13:54:24 2021 -0800
+
+    t-series of files
+
+commit f3b26ec9e53f97fdd24a82c89d4e9f4d54818013 (origin/master)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 13:13:23 2021 -0800
+
+    hello file createdin kalpana
+
+commit 596544f812cd4ec986a241f41851288b1739ec7c
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:30:00 2021 -0800
+
+    sample file modified with 2 lines of data
+
+commit 0570c7650f7ec57a84def2d46f65aa91a7edf7b7
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$
+
+--------------------------------------------------------------------------------
+
+$ git switch tekteacher
+Switched to branch 'tekteacher'
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tekteacher)
+$ git branch -d tekteacher
+error: Cannot delete branch 'tekteacher' checked out at 'D:/s20/vinay'
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tekteacher)
+$ git switch master
+Switched to branch 'master'
+Your branch is ahead of 'origin/master' by 6 commits.
+  (use "git push" to publish your local commits)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git branch -d tekteacher
+Deleted branch tekteacher (was c0232a2).
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git branch
+* master
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git log
+commit c0232a2c3ab5fb4d21b4fa89d6fe45682969c24b (HEAD -> master)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 18:43:16 2021 -0800
+
+    sam file
+
+commit cf0c4eab7dfb72008afefa5d820e61cd65ff9049
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 18:26:39 2021 -0800
+
+    jcb file
+
+commit 7f1d4dde338321fc0134c4f0c948fb2202631672
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:17:47 2021 -0800
+
+    ignore
+
+commit fa8ae0413980ed1fb2a48f58dce560790a655429
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:08:17 2021 -0800
+
+    app.class file
+
+commit 199a9ae3cfeddb38e46a6737cd45835e71cb3f0e
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:04:22 2021 -0800
+
+    ignore concept
+
+commit 7160614de88c00ea204f170f173b0da37922531e
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 13:54:24 2021 -0800
+
+    t-series of files
+
+commit f3b26ec9e53f97fdd24a82c89d4e9f4d54818013 (origin/master)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 13:13:23 2021 -0800
+
+    hello file createdin kalpana
+
+commit 596544f812cd4ec986a241f41851288b1739ec7c
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:30:00 2021 -0800
+
+    sample file modified with 2 lines of data
+
+commit 0570c7650f7ec57a84def2d46f65aa91a7edf7b7
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$
+
+	
+
+checkout command:-
+==================
+1. git checkout <BRANCH>:<COMMITID> --> specific commit('detached HEAD')
+2. git checkout branch_name --> to switch one branch to another  
+3. git checkout -b <new-branch-name> --> creating and directly switching to new branch 
+4. git checkout -- file1 file2 --> to dicard the changes in working directory(when only files deleted,edited from work dir)
+ 
+		   program:-
+        	---------------
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git checkout -b tek           
+Switched to a new branch 'tek'
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ ls
+app.class  hello  jcb  sam  sample  t1  t2  t3
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ vi mani           (mani file from tek branch)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git add .
+warning: LF will be replaced by CRLF in mani.
+The file will have its original line endings in your working directory
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git commit -m"mani file"
+[tek 49f52a0] mani file
+ 1 file changed, 1 insertion(+)
+ create mode 100644 mani
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git switch master
+Switched to branch 'master'
+Your branch is ahead of 'origin/master' by 6 commits.
+  (use "git push" to publish your local commits)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ vi mani             (mani file from master branch)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git add .
+warning: LF will be replaced by CRLF in mani.
+The file will have its original line endings in your working directory
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git commit -m"mani file"
+[master 5ab8ee0] mani file
+ 1 file changed, 1 insertion(+)
+ create mode 100644 mani
+ 				conflict 
+---------------------------------------------------------------------------------------------
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git merge tek
+Auto-merging mani
+CONFLICT (add/add): Merge conflict in mani
+Automatic merge failed; fix conflicts and then commit the result.
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master|MERGING)
+$ vi mani 
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master|MERGING)
+$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 7 commits.
+  (use "git push" to publish your local commits)
+
+You have unmerged paths.
+  (fix conflicts and run "git commit")
+  (use "git merge --abort" to abort the merge)
+
+Unmerged paths:
+  (use "git add <file>..." to mark resolution)
+        both added:      mani
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master|MERGING)
+$ git add .
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master|MERGING)
+$ git commit -m"conflict resloved"
+[master eaea77c] conflict resloved
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ ls
+app.class  hello  jcb  mani  sam  sample  t1  t2  t3
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$
+ 
+--------------------------------------------------------------------
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ touch x1 x2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git add .
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 9 commits.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ vi .gitignore                (.git ignore *.class dev* X* vinodh)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git add -f x1 x2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 9 commits.
+  (use "git push" to publish your local commits)
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        new file:   x1
+        new file:   x2
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git commit x1 -m"x1 file"
+[master 83e15c8] x1 file
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 x1
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git commit x2 -m"x2 file"
+[master 71e674f] x2 file
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 x2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git log
+commit 71e674faed6f56f51ccd8dbd32f1c6f881c1ef71 (HEAD -> master)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:27:30 2021 -0800
+
+    x2 file
+
+commit 83e15c8fe82bc820b415283da1b81044f20d2cd2
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:27:13 2021 -0800
+
+    x1 file
+
+commit eaea77c9f83c1764e6c28b1bd988e7d1dce2099f
+Merge: 5ab8ee0 49f52a0
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:15:30 2021 -0800
+
+    conflict resloved
+
+commit 5ab8ee0e6047737de3a0cdbd0169fdae4ae99d89
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:11:40 2021 -0800
+
+    mani file
+
+commit 49f52a0b67c2d11b980d038a2a807490d52daafa (tek)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:09:57 2021 -0800
+
+    mani file
+
+commit c0232a2c3ab5fb4d21b4fa89d6fe45682969c24b
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 18:43:16 2021 -0800
+
+    sam file
+
+commit cf0c4eab7dfb72008afefa5d820e61cd65ff9049
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 18:26:39 2021 -0800
+
+    jcb file
+
+commit 7f1d4dde338321fc0134c4f0c948fb2202631672
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:17:47 2021 -0800
+
+    ignore
+
+
+cherry-pick
+===========
+it picks the specific commit-id for merging. 
+eg:-  git cherry-pick a620252dbebc44a63ef8fc3041b5eef82d3089ef
+
+			PROGRAM:-
+                   -----------------
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git switch tek
+Switched to branch 'tek'
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ ls
+app.class  hello  jcb  mani  sam  sample  t1  t2  t3
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git cherry-pick  71e674faed6f56f51ccd8dbd32f1c6f881c1ef71
+[tek f05285f] x2 file
+ Date: Wed Nov 24 19:27:30 2021 -0800
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 x2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ ls
+app.class  hello  jcb  mani  sam  sample  t1  t2  t3  x2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git log
+commit f05285faf79c2a5559736f52318dbb47dc7dd7c1 (HEAD -> tek)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:27:30 2021 -0800
+
+    x2 file
+
+commit 49f52a0b67c2d11b980d038a2a807490d52daafa
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:09:57 2021 -0800
+
+    mani file
+
+commit c0232a2c3ab5fb4d21b4fa89d6fe45682969c24b
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 18:43:16 2021 -0800
+
+    sam file
+
+commit cf0c4eab7dfb72008afefa5d820e61cd65ff9049
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 18:26:39 2021 -0800
+
+    jcb file
+
+commit 7f1d4dde338321fc0134c4f0c948fb2202631672
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:17:47 2021 -0800
+
+    ignore
+
+commit fa8ae0413980ed1fb2a48f58dce560790a655429
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:08:17 2021 -0800
+
+    app.class file
+
+commit 199a9ae3cfeddb38e46a6737cd45835e71cb3f0e
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:04:22 2021 -0800
+
+    ignore concept
+
+commit 7160614de88c00ea204f170f173b0da37922531e
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 13:54:24 2021 -0800
+
+    t-series of files
+
+commit f3b26ec9e53f97fdd24a82c89d4e9f4d54818013 (origin/master)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 13:13:23 2021 -0800
+
+    hello file createdin kalpana
+
+commit 596544f812cd4ec986a241f41851288b1739ec7c
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:30:00 2021 -0800
+
+    sample file modified with 2 lines of data
+
+commit 0570c7650f7ec57a84def2d46f65aa91a7edf7b7
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:12:02 2021 -0800
+
+    iam creating new file called sample
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git switch master
+Switched to branch 'master'
+Your branch is ahead of 'origin/master' by 11 commits.
+  (use "git push" to publish your local commits)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ ls
+app.class  hello  jcb  mani  sam  sample  t1  t2  t3  x1  x2
+
+
+
+Stash::
+=======
+saving(backup) your un-commited changes and also you can get it back(restore) whenever you want.
+git stash save "message" --> it will do 2 things 
+	1. whenever you modifing the changes it will take backup.
+	2. and it revert back with orginal position of the file where you started. 
+git stash list  --> list all stashes
+git stash apply stash@{0} --> to apply(restore) the changes
+git stash pop   --> it will apply and remove the last stash array[0]
+git stash drop  --> it will drop the latest one (or) you can specify perticular one also eg:- git stash drop stash@{3}
+git stash clear --> remove all backup stashes.
+git stash show  --> it shows the changes that are there in the stash 
+
+file types in git repositories
+
+    tracked file -->  a file which has been already staged/indexed and committed.
+       * git stash
+    untracked file --> a file which has not been already staged or committed.
+       * git stash -u save "message"
+    ignored file --> a file which Git has been explicitly told to ignore. (eg:- .gitignore)
+       * git stash -a  save "message
+
+					program:-
+				----------------------------------
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ ls
+app.class  hello  jcb  mani  sam  sample  t1  t2  t3  x1  x2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ vi t2   (line1...line100)
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 11 commits.
+  (use "git push" to publish your local commits)
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   t2 (red colour)
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git stash save "manager call"
+warning: LF will be replaced by CRLF in t2.
+The file will have its original line endings in your working directory
+Saved working directory and index state On master: manager call
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ vi t2      (no data shows t2 the data is saving (backup))
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git stash list   (the data shows used this commit stash list)
+stash@{0}: On master: manager call
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git stash apply stash@{0}
+On branch master
+Your branch is ahead of 'origin/master' by 11 commits.
+  (use "git push" to publish your local commits)
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   t2 (red colour)
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ vi t2 ( line1....line100,line101.....line200))
+		 (shows)  |   (add the data)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git stash save "lunch break"
+Saved working directory and index state On master: lunch break
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git stash list
+stash@{0}: On master: lunch break
+stash@{1}: On master: manager call
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git stash pop    ( remove the last stash array[0])
+On branch master
+Your branch is ahead of 'origin/master' by 11 commits.
+  (use "git push" to publish your local commits)
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   t2
+
+no changes added to commit (use "git add" and/or "git commit -a")
+Dropped refs/stash@{0} (57f6dcc62af4808a7971f9c116ed835b138a405f)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ vi t2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git stash list
+stash@{0}: On master: manager call
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git add .
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git commit -m"stash is done"
+[master 6bc512a] stash is done
+ 1 file changed, 18 insertions(+)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git log
+commit 6bc512af1253ab1c8cffa69d6862602e20507975 (HEAD -> master)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 21:05:34 2021 -0800
+
+    stash is done
+
+commit 71e674faed6f56f51ccd8dbd32f1c6f881c1ef71
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:27:30 2021 -0800
+
+    x2 file
+
+commit 83e15c8fe82bc820b415283da1b81044f20d2cd2
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:27:13 2021 -0800
+
+    x1 file
+
+commit eaea77c9f83c1764e6c28b1bd988e7d1dce2099f
+Merge: 5ab8ee0 49f52a0
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:15:30 2021 -0800
+
+    conflict resloved
+
+commit 5ab8ee0e6047737de3a0cdbd0169fdae4ae99d89
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:11:40 2021 -0800
+
+    mani file
+
+commit 49f52a0b67c2d11b980d038a2a807490d52daafa
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:09:57 2021 -0800
+
+    mani file
+
+commit c0232a2c3ab5fb4d21b4fa89d6fe45682969c24b
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 18:43:16 2021 -0800
+
+    sam file
+
+commit cf0c4eab7dfb72008afefa5d820e61cd65ff9049
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 18:26:39 2021 -0800
+
+    jcb file
+
+commit 7f1d4dde338321fc0134c4f0c948fb2202631672
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:17:47 2021 -0800
+
+    ignore
+
+commit fa8ae0413980ed1fb2a48f58dce560790a655429
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:08:17 2021 -0800
+
+    app.class file
+
+commit 199a9ae3cfeddb38e46a6737cd45835e71cb3f0e
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:04:22 2021 -0800
+
+    ignore concept
+
+commit 7160614de88c00ea204f170f173b0da37922531e
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 13:54:24 2021 -0800
+
+    t-series of files
+
+commit f3b26ec9e53f97fdd24a82c89d4e9f4d54818013 (origin/master)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 13:13:23 2021 -0800
+
+    hello file createdin kalpana
+
+commit 596544f812cd4ec986a241f41851288b1739ec7c
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:30:00 2021 -0800
+
+    sample file modified with 2 lines of data
+
+commit 0570c7650f7ec57a84def2d46f65aa91a7edf7b7
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:12:02 2021 -0800
+
+    iam creating new file called sample
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$git stash drop stash@{3}  (particular delete)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$git stash clear      (remove all backup stashes)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$
+
+Snapshot
+=========
+ it store difference between the files in the form of snapshort
+
+    WD		  STG
+ tekteacher   tekteacher
+ ----------   -----------
+  line1          line1
+  line2          line2
+  line3          line3 (snapshort)
+
+rebase concept:-
+--------------
+
+
+
+Diff:-
+======
+used to compare Changes,branches,and commits.
+git diff --> diff b/n version in the working dir and version in the staging/index area 
+git diff HEAD --> diff b/n version in working dir and commiting dir
+git diff --cached --> diff b/n staging and commit versions
+git diff --name-only
+git diff --stat 
+git diff master..TekTeacher(current branch is optional)
+git diff master..TekTeacher --name-only
+git log master...TekTeacher  (Note: git diff requires triple dot .. and git log requires double dot ... to get the exact behaviour.) 
+
+ex:-
+---
+git diff                      wd- stg
+git diff HEAD                 wd - commt
+git diff --cached             stg - commt
+
+program:-
+--------
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git diff
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ ls
+app.class  hello  jcb  mani  sam  sample  t1  t2  t3  x1  x2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ vi t2         (line1,line2)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 12 commits.
+  (use "git push" to publish your local commits)
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   t2 (red colour)
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git diff      (working area delete staging area ok) (wd- stg)
+diff --git a/t2 b/t2
+index b06ad79..c0d0fb4 100644
+--- a/t2
++++ b/t2
+@@ -1,18 +1,2 @@
+ line1
+line2
+-.
+-.
+-.
+-.
+-.
+-.
+-line100
+-line 101
+-line102
+-.
+-.
+-.
+-.
+-.
+-.
+-line 200
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git diff HEAD          (wd - commt)
+diff --git a/t2 b/t2
+index b06ad79..c0d0fb4 100644
+--- a/t2
++++ b/t2
+@@ -1,18 +1,2 @@
+ line1
+line2
+-.
+-.
+-.
+-.
+-.
+-.
+-line100
+-line 101
+-line102
+-.
+-.
+-.
+-.
+-.
+-.
+-line 200
+
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 12 commits.
+  (use "git push" to publish your local commits)
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   t2
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git add t2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 12 commits.
+  (use "git push" to publish your local commits)
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   t2
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git diff
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git diff HEAD
+diff --git a/t2 b/t2
+index b06ad79..c0d0fb4 100644
+--- a/t2
++++ b/t2
+@@ -1,18 +1,2 @@
+ line1
+-line2.
+-.
+-.
+-.
+-.
+-.
+-.
+-line100
+-line 101
+-line102
+-.
+-.
+-.
+-.
+-.
+-.
+-line 200
++line2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git diff --cached      (stg - commt)
+diff --git a/t2 b/t2
+index b06ad79..c0d0fb4 100644
+--- a/t2
++++ b/t2
+@@ -1,18 +1,2 @@
+ line1
+-line2.
+-.
+-.
+-.
+-.
+-.
+-.
+-line100
+-line 101
+-line102
+-.
+-.
+-.
+-.
+-.
+-.
+-line 200
++line2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git commit -m"diff is done"
+[master 78b504d] diff is done
+ 1 file changed, 1 insertion(+), 17 deletions(-)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 13 commits.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git diff --cached
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git diff HEAD
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git diff
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git branch
+* master
+  tek
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (master)
+$ git checkout tek
+Switched to branch 'tek'
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ ls
+app.class  hello  jcb  mani  sam  sample  t1  t2  t3  x2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git diff  master..tek
+diff --git a/mani b/mani
+index 17c6d0e..e953197 100644
+--- a/mani
++++ b/mani
+@@ -1,2 +1 @@
+-mani file from master branch
+ mani file from tek branch
+diff --git a/t2 b/t2
+index c0d0fb4..e69de29 100644
+--- a/t2
++++ b/t2
+@@ -1,2 +0,0 @@
+-line1
+-line2
+diff --git a/x1 b/x1
+deleted file mode 100644
+index e69de29..0000000
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git diff  master..
+diff --git a/mani b/mani
+index 17c6d0e..e953197 100644
+--- a/mani
++++ b/mani
+@@ -1,2 +1 @@
+-mani file from master branch
+ mani file from tek branch
+diff --git a/t2 b/t2
+index c0d0fb4..e69de29 100644
+--- a/t2
++++ b/t2
+@@ -1,2 +0,0 @@
+-line1
+-line2
+diff --git a/x1 b/x1
+deleted file mode 100644
+index e69de29..0000000
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git diff  master..tek --name-only
+mani
+t2
+x1
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git log  master...tek
+commit 78b504dfae2d54ebf17b7effa0f53408d9ee3724 (master)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 21:30:08 2021 -0800
+
+    diff is done
+
+commit 6bc512af1253ab1c8cffa69d6862602e20507975
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 21:05:34 2021 -0800
+
+    stash is done
+
+commit f05285faf79c2a5559736f52318dbb47dc7dd7c1 (HEAD -> tek)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:27:30 2021 -0800
+
+    x2 file
+
+commit 71e674faed6f56f51ccd8dbd32f1c6f881c1ef71
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:27:30 2021 -0800
+
+    x2 file
+
+commit 83e15c8fe82bc820b415283da1b81044f20d2cd2
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:27:13 2021 -0800
+
+    x1 file
+
+commit eaea77c9f83c1764e6c28b1bd988e7d1dce2099f
+Merge: 5ab8ee0 49f52a0
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:15:30 2021 -0800
+
+    conflict resloved
+
+commit 5ab8ee0e6047737de3a0cdbd0169fdae4ae99d89
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:11:40 2021 -0800
+
+    mani file
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ ls
+app.class  hello  jcb  mani  sam  sample  t1  t2  t3  x2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git status
+On branch tek
+nothing to commit, working tree clean
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$
+
+
+Undos     
+=====
+i added a file into staging area, now i want to modify it before going to commit it?
+
+	      1. git reset (mixed is the default option) 
+              2. git reset --hard --> to remove changes from all the 3 areas
+						@ working directory
+						@ staging Area
+						@ Repository(once file/action arrives to staging area, it creats temperary commit id in commiting area)
+             
+               3. git reset --soft --> It only removes temp/ref id from commiting/git directory
+
+
+program:-
+-------
+**working directory  create file and delete file(untracked)
+----------------------------------------------------------------
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ ls
+app.class  hello  jcb  mani  sam  sample  t1  t2  t3  x2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ touch abhi
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git status
+On branch tek
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        abhi
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ rm abhi
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ ls
+app.class  hello  jcb  mani  sam  sample  t1  t2  t3  x2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git status
+On branch tek
+nothing to commit, working tree clean
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$
+
+****working directory  create file and delete file(tracked)
+  -------------------------------------------------------------
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ ls
+app.class  hello  jcb  mani  sam  sample  t1  t2  t3  x2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ rm t2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git status
+On branch tek
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        deleted:    t2
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git restore t2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git status
+On branch tek
+nothing to commit, working tree clean
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ ls
+app.class  hello  jcb  mani  sam  sample  t1  t2  t3  x2
+
+
+*working directory  delete file 
+---------------------------------
+ (staging area delete t2 )
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ ls
+app.class  hello  jcb  mani  sam  sample  t1  t2  t3  x2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ rm t2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ ls
+app.class  hello  jcb  mani  sam  sample  t1  t3  x2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git status
+On branch tek
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        deleted:    t2
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ ls
+app.class  hello  jcb  mani  sam  sample  t1  t3  x2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git add t2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git status
+On branch tek
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        deleted:    t2
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git commit t2 -m"t2 file del"
+[tek a28466d] t2 file del
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ delete mode 100644 t2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git log
+commit a28466db9cdd1b424a8a2baeb410f0ef542f60b0 (HEAD -> tek)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 22:15:17 2021 -0800
+
+    t2 file del
+
+commit f05285faf79c2a5559736f52318dbb47dc7dd7c1
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:27:30 2021 -0800
+
+    x2 file
+
+commit 49f52a0b67c2d11b980d038a2a807490d52daafa
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:09:57 2021 -0800
+
+    mani file
+
+commit c0232a2c3ab5fb4d21b4fa89d6fe45682969c24b
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 18:43:16 2021 -0800
+
+    sam file
+
+commit cf0c4eab7dfb72008afefa5d820e61cd65ff9049
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 18:26:39 2021 -0800
+
+    jcb file
+
+commit 7f1d4dde338321fc0134c4f0c948fb2202631672
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:17:47 2021 -0800
+
+    ignore
+
+commit fa8ae0413980ed1fb2a48f58dce560790a655429
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:08:17 2021 -0800
+
+    app.class file
+
+commit 199a9ae3cfeddb38e46a6737cd45835e71cb3f0e
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:04:22 2021 -0800
+
+    ignore concept
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git reflog
+
+a28466d (HEAD -> tek) HEAD@{0}: commit: t2 file del
+f05285f HEAD@{1}: checkout: moving from master to tek
+78b504d (master) HEAD@{2}: commit: diff is done
+6bc512a HEAD@{3}: commit: stash is done
+71e674f HEAD@{4}: reset: moving to HEAD
+71e674f HEAD@{5}: reset: moving to HEAD
+71e674f HEAD@{6}: checkout: moving from tek to master
+f05285f HEAD@{7}: cherry-pick: x2 file
+49f52a0 HEAD@{8}: checkout: moving from master to tek
+71e674f HEAD@{9}: commit: x2 file
+83e15c8 HEAD@{10}: commit: x1 file
+eaea77c HEAD@{11}: commit (merge): conflict resloved
+5ab8ee0 HEAD@{12}: commit: mani file
+c0232a2 HEAD@{13}: checkout: moving from tek to master
+49f52a0 HEAD@{14}: commit: mani file
+c0232a2 HEAD@{15}: checkout: moving from master to tek
+c0232a2 HEAD@{16}: checkout: moving from tekteacher to master
+c0232a2 HEAD@{17}: checkout: moving from master to tekteacher
+c0232a2 HEAD@{18}: merge tekteacher: Fast-forward
+7f1d4dd HEAD@{19}: checkout: moving from tekteacher to master
+c0232a2 HEAD@{20}: commit: sam file
+cf0c4ea HEAD@{21}: checkout: moving from master to tekteacher
+7f1d4dd HEAD@{22}: checkout: moving from tekteacher to master
+cf0c4ea HEAD@{23}: commit: jcb file
+7f1d4dd HEAD@{24}: checkout: moving from master to tekteacher
+7f1d4dd HEAD@{25}: commit: ignore
+fa8ae04 HEAD@{26}: commit: app.class file
+199a9ae HEAD@{27}: commit: ignore concept
+7160614 HEAD@{28}: commit: t-series of files
+f3b26ec (origin/master) HEAD@{29}: pull: Fast-forward
+596544f HEAD@{30}: commit: sample file modified with 2 lines of data
+0570c76 HEAD@{31}: commit (initial): iam creating new file called sample
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$
+
+
+		staging area
+	-----------------------------------------------
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ touch ipad
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ ls
+app.class  hello  ipad  jcb  mani  sam  sample  t1  t3  x2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git add ipad
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git status
+On branch tek
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        new file:   ipad   (green colour)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git reset --mixed  (staging area  back to working area)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git status
+On branch tek
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        ipad (red colour) (now working area)
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git add .
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git reset --hard          (3 area delete when temporary id previous depencies of commit id external)  
+HEAD is now at a28466d t2 file del
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git log --oneline
+a28466d (HEAD -> tek) t2 file del
+f05285f x2 file
+49f52a0 mani file
+c0232a2 sam file
+cf0c4ea jcb file
+7f1d4dd ignore
+fa8ae04 app.class file
+199a9ae ignore concept
+7160614 t-series of files
+f3b26ec (origin/master) hello file createdin kalpana
+596544f sample file modified with 2 lines of data
+0570c76 iam creating new file called sample
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ ls
+app.class  hello  jcb  mani  sam  sample  t1  t3  x2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ touch imac
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git add .
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git reset --soft         (deleted temporary id  staging area through commit id)
+                           (product team  view in tmp id, so that the delete temporary id )  
+				(st--temp id----commit)
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git status
+On branch tek
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        new file:   imac
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git commit -m"imac file"
+[tek 4086b38] imac file
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 imac
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git status
+On branch tek
+nothing to commit, working tree clean
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ ls
+app.class  hello  imac  jcb  mani  sam  sample  t1  t3  x2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$
+
+
+ Repository(once file/action arrives to staging area, it creats temperary commit id in commiting area)
+-----------------------------------------------------------------------------------------------------------             
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ ls
+app.class  hello  imac  jcb  mani  sam  sample  t1  t3  x2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git log
+commit 4086b385df0758723a6ae42efd2f56b28d8bfd8a (HEAD -> tek)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Thu Nov 25 02:03:28 2021 -0800
+
+    imac file
+
+commit a28466db9cdd1b424a8a2baeb410f0ef542f60b0
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 22:15:17 2021 -0800
+
+    t2 file del
+
+commit f05285faf79c2a5559736f52318dbb47dc7dd7c1
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:27:30 2021 -0800
+
+    x2 file
+
+commit 49f52a0b67c2d11b980d038a2a807490d52daafa
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:09:57 2021 -0800
+
+    mani file
+
+commit c0232a2c3ab5fb4d21b4fa89d6fe45682969c24b
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 18:43:16 2021 -0800
+
+    sam file
+
+commit cf0c4eab7dfb72008afefa5d820e61cd65ff9049
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 18:26:39 2021 -0800
+
+    jcb file
+
+commit 7f1d4dde338321fc0134c4f0c948fb2202631672
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:17:47 2021 -0800
+
+    ignore
+
+commit fa8ae0413980ed1fb2a48f58dce560790a655429
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:08:17 2021 -0800
+
+    app.class file
+
+commit 199a9ae3cfeddb38e46a6737cd45835e71cb3f0e
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:04:22 2021 -0800
+
+    ignore concept
+
+commit 7160614de88c00ea204f170f173b0da37922531e
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 13:54:24 2021 -0800
+
+    t-series of files
+
+commit f3b26ec9e53f97fdd24a82c89d4e9f4d54818013 (origin/master)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 13:13:23 2021 -0800
+
+    hello file createdin kalpana
+
+commit 596544f812cd4ec986a241f41851288b1739ec7c
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:30:00 2021 -0800
+
+    sample file modified with 2 lines of data
+
+commit 0570c7650f7ec57a84def2d46f65aa91a7edf7b7
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:12:02 2021 -0800
+
+    iam creating new file called sample
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$
+
+
+Undo/Reverting Changes after commiting:-
+=======================================
+   1. git revert 256ed01(1st 7char)  --> it revert only the content not the complete entry(commit id)  and create a new commit id and refering to previous.
+ 
+program:-
+--------
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git revert  4086b385df0758723a6ae42efd2f56b28d8bfd8a
+[tek c9221cb] Reverting "imac file"
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ delete mode 100644 imac
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git log
+commit c9221cb21426bafe5271a4156488849e346cba94 (HEAD -> tek)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Thu Nov 25 02:37:09 2021 -0800
+
+    Reverting "imac file"
+
+    This reverts commit 4086b385df0758723a6ae42efd2f56b28d8bfd8a.
+
+commit 4086b385df0758723a6ae42efd2f56b28d8bfd8a
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Thu Nov 25 02:03:28 2021 -0800
+
+    imac file
+
+commit a28466db9cdd1b424a8a2baeb410f0ef542f60b0
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 22:15:17 2021 -0800
+
+    t2 file del
+
+commit f05285faf79c2a5559736f52318dbb47dc7dd7c1
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:27:30 2021 -0800
+
+    x2 file
+
+commit 49f52a0b67c2d11b980d038a2a807490d52daafa
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:09:57 2021 -0800
+
+    mani file
+
+commit c0232a2c3ab5fb4d21b4fa89d6fe45682969c24b
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 18:43:16 2021 -0800
+
+    sam file
+
+commit cf0c4eab7dfb72008afefa5d820e61cd65ff9049
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 18:26:39 2021 -0800
+
+    jcb file
+
+commit 7f1d4dde338321fc0134c4f0c948fb2202631672
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:17:47 2021 -0800
+
+    ignore
+
+commit fa8ae0413980ed1fb2a48f58dce560790a655429
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:08:17 2021 -0800
+
+    app.class file
+
+commit 199a9ae3cfeddb38e46a6737cd45835e71cb3f0e
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:04:22 2021 -0800
+
+    ignore concept
+
+commit 7160614de88c00ea204f170f173b0da37922531e
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 13:54:24 2021 -0800
+
+    t-series of files
+
+commit f3b26ec9e53f97fdd24a82c89d4e9f4d54818013 (origin/master)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 13:13:23 2021 -0800
+
+    hello file createdin kalpana
+
+commit 596544f812cd4ec986a241f41851288b1739ec7c
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:30:00 2021 -0800
+
+    sample file modified with 2 lines of data
+
+commit 0570c7650f7ec57a84def2d46f65aa91a7edf7b7
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:12:02 2021 -0800
+
+    iam creating new file called sample
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ ls
+app.class  hello  jcb  mani  sam  sample  t1  t3  x2
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$
+
+
+Removing files:
+===============
+rm
+git rm filename 
+git clean -n(dry run means which are the file eligible to remove, very care full before running this)
+note: removes untracked files
+git clean -f( removes the untracked file instead of adding to .gitignore conf file)
+
+Removing files in working Dir:-
+===============================
+
+git rm :- will remove the file from the index and working directory ( only index if you used --cached ) -
+so that the deletion is staged for next commit.
+When using git rm, the removal will part of your next commit. So if you want to push the change you should use git rm
+rm:-However, if you do end up using rm instead of git rm. You can skip the git add and directly commit the changes using: git commit -
+
+
+HEAD:-
+======
+HEAD is the reference to the most recent commit in the current branch(In most of  the cases).
+HEAD Doesn't point to most recent commit when we go into DETACHED HEAD State. 
+  git show HEAD --> to see head commit
+  git difftool HEAD HEAD~1
+
+
+Tags:-
+-------
+to identify/reference for a commitid to quick access/ creating specific point in history for our repository
+
+create tag for particular commits:
+git tag <tag-name> <reference of commit>
+
+git tag <name-of-tag> --> light weight tag
+git tag -a <tag-name> -m "comment" <commitid> --> annotated tag
+git tag -n9 --> to see tag messgaes
+git tag --> to list tags
+git show --stat <tag_name>
+git push origin v7.2 ---> pushing to remote(github)
+git push origin --tags ---> pushing all tags at once to remote
+git push --tags
+Note:- when you working in folder in which github repository is cloned)
+
+Deleting tags from local repository:
+git tag -d <tag_name>
+git tag -delete <tag-name>
+git tag -d v7.2 vinumaa v7.3 --> deleting multiple tags at once in local repository
+
+Deleting tags from remote repository:
+git push origin -d v7.2
+git push origin -delete v7.2
+git push origin :v7.2
+git push origin -d v7.2 vinumaa v7.3 --> deleting multiple tags at once in remote repositor
+
+we cannot checkout tags in git but, we can create a branch from tag and checkout the branch
+git checkout -b <branch_name> <tag_name>(give already created tag names)
+ 
+
+Rewriting Commit Messages/History:-
+=================================
+--> git commit --amend -m "new message"  (re+t branch to list all files)
+--> git show --name-only <commit id> : specific file to list
+--> git commit --amend --no-edit : # Edit hello.py and main.py git add hello.py git commit
+				   # Realize you forgot to add the changes from main.py git add main.py git commit --amend --no-edit
+
+ p, pick = use commit
+ r, reword = use commit, but edit the commit message
+ e, edit = use commit, but stop for amending
+ s, squash = use commit, but meld into previous commit
+ f, fixup = like "squash", but discard this commit's log message
+ d, Drop = remove commit
+
+rebase --continue
+rebase --abort
+rebase --skip
+
+ program:-
+---------
+
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git log
+commit c9221cb21426bafe5271a4156488849e346cba94 (HEAD -> tek)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Thu Nov 25 02:37:09 2021 -0800
+
+    Reverting "imac file"
+
+    This reverts commit 4086b385df0758723a6ae42efd2f56b28d8bfd8a.
+
+commit 4086b385df0758723a6ae42efd2f56b28d8bfd8a
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Thu Nov 25 02:03:28 2021 -0800
+
+    imac file
+
+commit a28466db9cdd1b424a8a2baeb410f0ef542f60b0
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 22:15:17 2021 -0800
+
+    t2 file del
+
+commit f05285faf79c2a5559736f52318dbb47dc7dd7c1
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:27:30 2021 -0800
+
+    x2 file
+
+commit 49f52a0b67c2d11b980d038a2a807490d52daafa
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:09:57 2021 -0800
+
+    mani file
+
+commit c0232a2c3ab5fb4d21b4fa89d6fe45682969c24b
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 18:43:16 2021 -0800
+
+    sam file
+
+commit cf0c4eab7dfb72008afefa5d820e61cd65ff9049
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 18:26:39 2021 -0800
+
+    jcb file
+
+commit 7f1d4dde338321fc0134c4f0c948fb2202631672
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:17:47 2021 -0800
+
+    ignore
+
+commit fa8ae0413980ed1fb2a48f58dce560790a655429
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:08:17 2021 -0800
+
+    app.class file
+
+commit 199a9ae3cfeddb38e46a6737cd45835e71cb3f0e
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:04:22 2021 -0800
+
+    ignore concept
+
+commit 7160614de88c00ea204f170f173b0da37922531e
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 13:54:24 2021 -0800
+
+    t-series of files
+
+commit f3b26ec9e53f97fdd24a82c89d4e9f4d54818013 (origin/master)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 13:13:23 2021 -0800
+
+    hello file createdin kalpana
+
+commit 596544f812cd4ec986a241f41851288b1739ec7c
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:30:00 2021 -0800
+
+    sample file modified with 2 lines of data
+
+commit 0570c7650f7ec57a84def2d46f65aa91a7edf7b7
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:12:02 2021 -0800
+
+    iam creating new file called sample
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git commit --amend
+[tek c6b0cb8] kReverting "imac file"  raja kumar
+ Date: Thu Nov 25 02:37:09 2021 -0800
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ delete mode 100644 imac
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git log
+commit c6b0cb8bd036e06473f4e160b2beacf7b8f538be (HEAD -> tek)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Thu Nov 25 02:37:09 2021 -0800
+
+    kReverting "imac file"  raja kumar
+
+    This reverts commit 4086b385df0758723a6ae42efd2f56b28d8bfd8a.
+
+commit 4086b385df0758723a6ae42efd2f56b28d8bfd8a
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Thu Nov 25 02:03:28 2021 -0800
+
+    imac file
+
+commit a28466db9cdd1b424a8a2baeb410f0ef542f60b0
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 22:15:17 2021 -0800
+
+    t2 file del
+
+commit f05285faf79c2a5559736f52318dbb47dc7dd7c1
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:27:30 2021 -0800
+
+    x2 file
+
+commit 49f52a0b67c2d11b980d038a2a807490d52daafa
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:09:57 2021 -0800
+
+    mani file
+
+commit c0232a2c3ab5fb4d21b4fa89d6fe45682969c24b
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 18:43:16 2021 -0800
+
+    sam file
+
+commit cf0c4eab7dfb72008afefa5d820e61cd65ff9049
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 18:26:39 2021 -0800
+
+    jcb file
+
+commit 7f1d4dde338321fc0134c4f0c948fb2202631672
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:17:47 2021 -0800
+
+    ignore
+
+commit fa8ae0413980ed1fb2a48f58dce560790a655429
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:08:17 2021 -0800
+
+    app.class file
+
+commit 199a9ae3cfeddb38e46a6737cd45835e71cb3f0e
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:04:22 2021 -0800
+
+    ignore concept
+
+commit 7160614de88c00ea204f170f173b0da37922531e
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 13:54:24 2021 -0800
+
+    t-series of files
+
+commit f3b26ec9e53f97fdd24a82c89d4e9f4d54818013 (origin/master)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 13:13:23 2021 -0800
+
+    hello file createdin kalpana
+
+commit 596544f812cd4ec986a241f41851288b1739ec7c
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:30:00 2021 -0800
+
+    sample file modified with 2 lines of data
+
+commit 0570c7650f7ec57a84def2d46f65aa91a7edf7b7
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:12:02 2021 -0800
+
+    iam creating new file called sample
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git rebase  -i HEAD~4
+[detached HEAD 5dcb5a9] t2 file del
+ Date: Wed Nov 24 22:15:17 2021 -0800
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ delete mode 100644 t2
+[detached HEAD 03e0c3d] Revert "imac file"  raja kumar
+ Date: Thu Nov 25 02:37:09 2021 -0800
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ delete mode 100644 imac
+Successfully rebased and updated refs/heads/tek.
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git log
+commit 03e0c3d6eeb10cd9dfa078791b24f82e65cd932f (HEAD -> tek)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Thu Nov 25 02:37:09 2021 -0800
+
+    Revert "imac file"  raja kumar
+
+    This reverts commit 4086b385df0758723a6ae42efd2f56b28d8bfd8a.
+
+commit 1a27798a205ef0275fddd9a54ce14574a83e7fb1
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Thu Nov 25 02:03:28 2021 -0800
+
+    imac file
+
+commit 5dcb5a9624c7539d72b750e1df3bac110c784981
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 22:15:17 2021 -0800
+
+    t2 file del
+
+commit 03e0c3d6eeb10cd9dfa078791b24f82e65cd932f (HEAD -> tek)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Thu Nov 25 02:37:09 2021 -0800
+
+    Revert "imac file"  raja kumar
+
+    This reverts commit 4086b385df0758723a6ae42efd2f56b28d8bfd8a.
+
+commit 1a27798a205ef0275fddd9a54ce14574a83e7fb1
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Thu Nov 25 02:03:28 2021 -0800
+
+    imac file
+
+commit 5dcb5a9624c7539d72b750e1df3bac110c784981
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 22:15:17 2021 -0800
+
+    t2 file del
+
+commit f05285faf79c2a5559736f52318dbb47dc7dd7c1
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:27:30 2021 -0800
+
+    x2 file
+
+commit 49f52a0b67c2d11b980d038a2a807490d52daafa
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:09:57 2021 -0800
+
+    mani file
+
+commit c0232a2c3ab5fb4d21b4fa89d6fe45682969c24b
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 18:43:16 2021 -0800
+
+    sam file
+
+commit cf0c4eab7dfb72008afefa5d820e61cd65ff9049
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 18:26:39 2021 -0800
+
+    jcb file
+
+commit 7f1d4dde338321fc0134c4f0c948fb2202631672
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:17:47 2021 -0800
+
+    ignore
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git rebase -i HEAD~4
+[detached HEAD a223644] hii raja kumar
+ Date: Wed Nov 24 19:27:30 2021 -0800
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+ rename t2 => imac (100%)
+ create mode 100644 x2
+Successfully rebased and updated refs/heads/tek.
+
+siva@DESKTOP-NB7E3GI MINGW64 /d/s20/vinay (tek)
+$ git log
+commit 084a3124d06ddfbd50dff82abdf93a8a55d2aeb7 (HEAD -> tek)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Thu Nov 25 02:37:09 2021 -0800
+
+    Revert "imac file"  raja kumar
+
+    This reverts commit 4086b385df0758723a6ae42efd2f56b28d8bfd8a.
+
+commit a223644e6a6347ea9e00968705b337036c8a8852
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:27:30 2021 -0800
+
+    hii raja kumar
+
+    x2 file
+
+    t2 file del
+
+    imac file
+
+commit 49f52a0b67c2d11b980d038a2a807490d52daafa
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 19:09:57 2021 -0800
+
+    mani file
+
+commit c0232a2c3ab5fb4d21b4fa89d6fe45682969c24b
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 18:43:16 2021 -0800
+
+    sam file
+
+commit cf0c4eab7dfb72008afefa5d820e61cd65ff9049
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 18:26:39 2021 -0800
+
+    jcb file
+
+commit 7f1d4dde338321fc0134c4f0c948fb2202631672
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:17:47 2021 -0800
+
+    ignore
+
+commit fa8ae0413980ed1fb2a48f58dce560790a655429
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:08:17 2021 -0800
+
+    app.class file
+
+commit 199a9ae3cfeddb38e46a6737cd45835e71cb3f0e
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 14:04:22 2021 -0800
+
+    ignore concept
+
+commit 7160614de88c00ea204f170f173b0da37922531e
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 13:54:24 2021 -0800
+
+    t-series of files
+
+commit f3b26ec9e53f97fdd24a82c89d4e9f4d54818013 (origin/master)
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 13:13:23 2021 -0800
+
+    hello file createdin kalpana
+
+commit 596544f812cd4ec986a241f41851288b1739ec7c
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:30:00 2021 -0800
+
+    sample file modified with 2 lines of data
+
+commit 0570c7650f7ec57a84def2d46f65aa91a7edf7b7
+Author: saikrishna <saikrishna@gmail.com>
+Date:   Wed Nov 24 12:12:02 2021 -0800
+
+    iam creating new file called sample
+
+
+
+Fetch and pull:-
+----------------
+pull = fetch + merge
+git fetch origin: i.e all the repos in the github will come to local repository,
+git merge origin/master : to integrate the commitids 
+
+workflow:-
+=========
+	     |		Add	       |	Commit	       |			      |	 	
+	     |------------------------>|---------------------->| 			      |  		       			      
+	     |----------------Commit -a ---------------------->|	  git push            |
+	     |			       |		       |----------------------------->|
+	Working Dir		     Index		Commiting Area 		      Remote Repository(GitHub)
+	(work space)  	  	   (Staging)	    	    (HEAD)			      | 	
+	     |			       |		       |<----------git fetch----------|
+	     |<-------------------Merge------------------------|			      |	
+	     |			       |		       |			      |	
+	     |<----------------------------------Pull-----------------------------------------|
+	     |<--------------------diff HEAD------------------>|			      |
+	     |<----------diff--------->|	
+
+
+Note:- the above commit -a option will only work for already known files to staging area(i.e old files)	
+	   	    
+reflog:-
+========
+it shows when we commit,checkout branch, reset....etc
+git reflog 
+git reflog show --all
+git reflog show <branch_name>
+git reflog master@{1.minute.ago}
+git reflog show HEAD@{5}
+
+** Basically "git blame <file_name>" is used to show what revision and author last modified each line of a file. 
+   It's like checking the history of the development of a file.
+
+                                                   =========THE END=======
+			    TekTeacher +91- 7204143230(WhatsApp/Call),E:- contact@tekteacher.com
+
+
+
+
+
+
+
+
+
+
+
+
+
